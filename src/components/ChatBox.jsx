@@ -8,6 +8,15 @@ const ChatBox = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userId] = useState(() => {
+        // Get or create a unique user ID for this device/browser
+        let id = localStorage.getItem('chatUserId');
+        if (!id) {
+            id = 'user_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('chatUserId', id);
+        }
+        return id;
+    });
 
     useEffect(() => {
         // Real-time listener - automatically fetches all previous messages
@@ -37,6 +46,7 @@ const ChatBox = () => {
         try {
             await addDoc(collection(db, 'messages'), {
                 text: message,
+                senderId: userId,
                 timestamp: serverTimestamp(),
             });
         } catch (err) {
@@ -50,7 +60,7 @@ const ChatBox = () => {
 
     return (
         <div className="chat-box">
-            <MessageList messages={messages} />
+            <MessageList messages={messages} currentUserId={userId} />
             <ChatInput addMessage={addMessage} />
         </div>
     );
