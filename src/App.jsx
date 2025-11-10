@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import ChatBox from './components/ChatBox';
-import MessageList from './components/MessageList';
-import { db } from './firebase/config';
-import { collection, onSnapshot, addDoc } from 'firebase/firestore';
+import React from 'react';import React from 'react';
 
-const App = () => {
-    const [messages, setMessages] = useState([]);
+import ChatBox from './components/ChatBox';import ChatBox from './components/ChatBox';
 
-    useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, 'messages'), (snapshot) => {
-            const messagesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setMessages(messagesData);
-        });
+import './App.css';import './App.css';
 
-        return () => unsubscribe();
-    }, []);
 
-    const sendMessage = async (message) => {
-        await addDoc(collection(db, 'messages'), {
-            text: message,
-            createdAt: new Date(),
-        });
-    };
 
-    return (
-        <div className="App">
-            <h1>Chat Application</h1>
-            <MessageList messages={messages} />
-            <ChatBox sendMessage={sendMessage} />
+const App = () => {const App = () => {
+
+    return (    return (
+
+        <div className="App">        <div className="App">
+
+            <h1>Chat Application</h1>            <h1>Chat Application</h1>
+
+            <ChatBox />            <ChatBox />
+
+        </div>        </div>
+
+    );    );
+
+};};
+
         </div>
-    );
+
+export default App;    );
+
 };
 
 export default App;
